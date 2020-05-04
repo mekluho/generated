@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ru.mekluho.generated.mappers.CommonMapper">
+
+    <resultMap id="someTypeMap" type="ru.mekluho.generated.model.SomeType">
+        <id column="id" property="id"/>
+        <result property="code" column="type_code"/>
+        <result property="description" column="type_description"/>
+    </resultMap>
+
+    <sql id="someTypeCols">
+        ${some_type_alias}.id AS id,
+        ${some_type_alias}.code AS type_code,
+        ${some_type_alias}.description as type_description
+    </sql>
+
+    <select id="selectAllTypes" resultMap="someTypeMap">
+        SELECT
+        <include refid="someTypeCols">
+            <property name="some_type_alias" value="t"/>
+        </include>
+         from list_types t
+
+    </select>
+
+    <select id="selectUserByLogin" resultMap="someTypeMap">
+        SELECT
+        <include refid="someTypeCols">
+            <property name="user_alias" value="u"/>
+        </include>
+        from usr u
+        where login = #{login}
+    </select>
+
+    <select id="selectUserByLoginAndPwd" resultMap="someTypeMap">
+        SELECT
+        <include refid="someTypeCols">
+            <property name="user_alias" value="u"/>
+        </include>
+        from usr u
+        where login = #{login}
+        and passwd = convert(varbinary(255), #{pwd})
+    </select>
+
+    <select id="selectUserCardByLogin" resultMap="someTypeMap">
+        SELECT
+        <include refid="someTypeCols">
+            <property name="user_alias" value="u"/>
+        </include>
+        from usr u
+        where login = #{login}
+    </select>
+
+    <select id="selectUserById" resultMap="someTypeMap">
+        SELECT
+        <include refid="someTypeCols">
+            <property name="user_alias" value="u"/>
+        </include>
+        from usr u
+        where usr_id = #{id}
+    </select>
+
+    <select id="selectUserCardById" resultMap="someTypeMap">
+        SELECT
+        <include refid="someTypeCols">
+            <property name="user_alias" value="u"/>
+        </include>
+        from usr u
+        where usr_id = #{id}
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyColumn="usr_id" keyProperty="user.id">
+        INSERT INTO usr (
+            login,
+            passwd,
+            lastname,
+            email,
+            dt_registration,
+            is_admin,
+            dt_created,
+            dt_modified
+        )
+        VALUES (
+            #{user.login},
+            convert(varbinary(255), #{hashedPwd}),
+            '',
+            '',
+            CURRENT_TIMESTAMP,
+            0,
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+</mapper>
